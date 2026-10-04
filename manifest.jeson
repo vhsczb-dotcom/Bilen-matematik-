@@ -1,0 +1,11 @@
+{
+  "name": "Öykü Matematik",
+  "short_name": "Öykü Matematik",
+  "description": "6, 7 ve 8. sınıf matematik ve LGS çalışma uygulaması",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f6fb",
+  "theme_color": "#e8eefc",
+  "lang": "tr"
+}
