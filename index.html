@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Öykü Matematik</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .kutu {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      margin-bottom: 10px;
+    }
+
+    #soru {
+      font-size: 28px;
+      margin: 30px 0;
+    }
+
+    button {
+      width: 45%;
+      margin: 8px;
+      padding: 16px;
+      font-size: 20px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    #sonuc {
+      font-size: 22px;
+      margin-top: 20px;
+      min-height: 30px;
+    }
+
+    #puan {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="kutu">
+
+    <h1>Öykü'nün Matematik Dünyası</h1>
+
+    <p>Doğru cevabı seç bakalım 🌟</p>
+
+    <div id="soru"></div>
+
+    <div id="secenekler"></div>
+
+    <div id="sonuc"></div>
+
+    <div id="puan">Puan: 0</div>
+
+  </div>
+
+  <script>
+
+    const sorular = [
+
+      {
+        soru: "8 + 7 kaçtır?",
+        secenekler: ["13", "14", "15", "16"],
+        cevap: "15"
+      },
+
+      {
+        soru: "20 - 6 kaçtır?",
+        secenekler: ["12", "13", "14", "15"],
+        cevap: "14"
+      },
+
+      {
+        soru: "5 × 4 kaçtır?",
+        secenekler: ["10", "15", "20", "25"],
+        cevap: "20"
+      },
+
+      {
+        soru: "18 ÷ 3 kaçtır?",
+        secenekler: ["5", "6", "7", "8"],
+        cevap: "6"
+      }
+
+    ];
+
+    let soruNo = 0;
+    let puan = 0;
+
+    function soruGoster() {
+
+      const aktif = sorular[soruNo];
+
+      document.getElementById("soru").innerText = aktif.soru;
+
+      document.getElementById("sonuc").innerText = "";
+
+      const alan = document.getElementById("secenekler");
+
+      alan.innerHTML = "";
+
+      aktif.secenekler.forEach(secenek => {
+
+        const buton = document.createElement("button");
+
+        buton.innerText = secenek;
+
+        buton.onclick = function() {
+          cevapKontrol(secenek);
+        };
+
+        alan.appendChild(buton);
+
+      });
+
+    }
+
+    function cevapKontrol(secim) {
+
+      const dogru = sorular[soruNo].cevap;
+
+      if (secim === dogru) {
+
+        puan++;
+
+        document.getElementById("sonuc").innerText =
+          "Doğru! 🎉";
+
+      } else {
+
+        document.getElementById("sonuc").innerText =
+          "Yanlış. Doğru cevap: " + dogru;
+
+      }
+
+      document.getElementById("puan").innerText =
+        "Puan: " + puan;
+
+      setTimeout(() => {
+
+        soruNo++;
+
+        if (soruNo < sorular.length) {
+
+          soruGoster();
+
+        } else {
+
+          document.getElementById("soru").innerText =
+            "Test bitti!";
+
+          document.getElementById("secenekler").innerHTML =
+            "";
+
+          document.getElementById("sonuc").innerText =
+            "Toplam puanın: " + puan + " / " + sorular.length;
+
+        }
+
+      }, 1200);
+
+    }
+
+    soruGoster();
+
+  </script>
+
+</body>
+</html>
