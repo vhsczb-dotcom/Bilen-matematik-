@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<rect width="512" height="512" rx="110" fill="#5b5ce2"/>
+<path d="M128 116h256c20 0 36 16 36 36v208c0 20-16 36-36 36H128c-20 0-36-16-36-36V152c0-20 16-36 36-36z" fill="white"/>
+<path d="M256 116v280" stroke="#5b5ce2" stroke-width="18"/>
+<path d="M132 175h82M132 225h82M298 175h82M298 225h82" stroke="#5b5ce2" stroke-width="15" stroke-linecap="round"/>
+<text x="256" y="335" text-anchor="middle" font-family="Arial" font-size="92" font-weight="700" fill="#5b5ce2">π</text>
+</svg>

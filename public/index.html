@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#5b5ce2">
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Öykü Matematik">
+<title>Öykü Matematik</title>
+<style>
+:root{
+  --bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#667085;--line:#e6eaf0;
+  --pri:#5b5ce2;--pri2:#7c3aed;--ok:#0f9d63;--bad:#d64545;--warn:#b7791f;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.app{max-width:1100px;margin:auto;padding:16px 16px 90px}
+.topbar{position:sticky;top:0;z-index:20;background:rgba(244,247,251,.94);backdrop-filter:blur(10px);padding:10px 0}
+.toprow{display:flex;align-items:center;gap:10px}
+.logo{font-size:22px;font-weight:900;flex:1}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:8px 12px;font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 8px 24px rgba(16,24,40,.06);margin:14px 0}
+.hero{background:linear-gradient(135deg,#5b5ce2,#7c3aed);color:#fff;padding:26px}
+.hero h1{margin:0 0 8px;font-size:34px}.hero p{margin:0;opacity:.92;font-size:18px;line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.btn{border:0;border-radius:14px;padding:13px 16px;font-weight:800;background:#eef1ff;color:#2f36a8}
+.btn.primary{background:var(--pri);color:#fff}.btn.secondary{background:#fff;border:1px solid var(--line);color:var(--ink)}
+.btn.good{background:#e7f8ef;color:#087344}.btn.warn{background:#fff4df;color:#8b5b09}.btn.danger{background:#fdeaea;color:#a82c2c}
+.classbtn{min-height:130px;text-align:left;background:#fff;border:1px solid var(--line);border-radius:20px;padding:20px}
+.classbtn b{font-size:28px;display:block;margin-bottom:6px}.classbtn span{color:var(--muted);line-height:1.4}
+.topic{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;text-align:left}
+.topic h3{margin:0 0 8px;font-size:18px}.topic p{margin:0;color:var(--muted);line-height:1.45}
+.topic .meta{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-top:14px;font-size:13px;color:var(--muted)}
+.bar{height:9px;background:#eef0f4;border-radius:99px;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2))}
+.sectionTitle{display:flex;gap:10px;align-items:center}.sectionTitle h2{margin:0;flex:1}
+.small{font-size:13px;color:var(--muted)}.muted{color:var(--muted)}
+.hide{display:none!important}
+.lesson{min-height:520px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:28px}
+.lesson h1{font-size:40px;margin:8px 0 16px}.lesson h2{font-size:32px;margin:8px 0 16px}.lesson p{font-size:21px;line-height:1.55;max-width:780px}
+.rulebox{width:100%;max-width:760px;text-align:left;background:#f8f9ff;border:1px solid #e4e6ff;border-radius:18px;padding:18px;margin:8px 0;font-size:20px;line-height:1.5}
+.math{font-size:40px;font-weight:900;margin:18px 0}
+.lessonNav{display:flex;align-items:center;gap:10px;margin-top:12px}.lessonNav .count{flex:1;text-align:center;color:var(--muted)}
+.voice{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.voice select,.voice input{border:1px solid var(--line);background:#fff;border-radius:12px;padding:9px}
+.qhead{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.qhead .grow{flex:1}.question{font-size:24px;line-height:1.5;margin:22px 0}
+.answers{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.answer{border:1px solid var(--line);background:#fff;border-radius:15px;padding:15px;text-align:left;font-weight:750}
+.answer:hover{border-color:#a6abff}.answer.correct{background:#e9f9f0;border-color:#8ad5ae}.answer.wrong{background:#fdeeee;border-color:#efaaaa}
+.explain{margin-top:15px;padding:15px;border-radius:15px;background:#f7f8fb;line-height:1.5}
+.stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:16px}.stat b{font-size:26px;display:block}
+.coach{background:linear-gradient(135deg,#111827,#25324d);color:#fff}
+.coach .bubble{background:rgba(255,255,255,.1);border-radius:16px;padding:15px;line-height:1.55;margin:10px 0}
+.chatrow{display:flex;gap:8px}.chatrow input{flex:1;border:0;border-radius:13px;padding:13px}
+.list{display:grid;gap:10px}.listitem{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff}
+.badge{display:inline-block;border-radius:999px;padding:5px 9px;background:#f0f2f7;font-size:12px;margin-right:5px}
+.bottomnav{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(12px);border-top:1px solid var(--line);z-index:30}
+.bottomnav .inner{max-width:1100px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr)}
+.navbtn{border:0;background:transparent;padding:12px 6px;color:#667085;font-size:12px}.navbtn b{display:block;font-size:20px;margin-bottom:3px}.navbtn.active{color:var(--pri)}
+.modal{position:fixed;inset:0;background:rgba(17,24,39,.56);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+.modalbox{background:#fff;border-radius:22px;padding:22px;max-width:520px;width:100%;max-height:85vh;overflow:auto}
+.formrow{display:grid;gap:6px;margin:12px 0}.formrow input,.formrow select{border:1px solid var(--line);border-radius:12px;padding:12px}
+.timer{font-weight:900;color:var(--warn)}
+@media(max-width:780px){
+ .grid{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}.answers{grid-template-columns:1fr}
+ .lesson{min-height:470px;padding:20px}.lesson h1{font-size:32px}.lesson h2{font-size:27px}.lesson p{font-size:19px}.math{font-size:34px}
+ .hero h1{font-size:29px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar">
+    <div class="toprow">
+      <div class="logo">📘 Öykü Matematik</div>
+      <button class="chip" onclick="openSettings()">⚙️ Ayarlar</button>
+    </div>
+  </div>
+
+  <main id="view"></main>
+</div>
+
+<div class="bottomnav">
+  <div class="inner">
+    <button class="navbtn active" data-nav="home" onclick="go('home')"><b>🏠</b>Ana Sayfa</button>
+    <button class="navbtn" data-nav="roadmap" onclick="go('roadmap')"><b>🧭</b>Yol Haritası</button>
+    <button class="navbtn" data-nav="wrongs" onclick="go('wrongs')"><b>📝</b>Yanlışlarım</button>
+    <button class="navbtn" data-nav="coach" onclick="go('coach')"><b>🤖</b>Öykü AI</button>
+  </div>
+</div>
+
+<div id="modal" class="modal hide"></div>
+
+<script>
+const CURRICULUM_NOTE = "2026-2027: 6 ve 7. sınıf Türkiye Yüzyılı Maarif Modeli temaları; 8. sınıf mevcut LGS matematik programı.";
+const APP_KEY="oykuMatematikV3";
+
+const DATA={
+6:[
+ {id:"6n1",title:"Sayılar ve Nicelikler (1)",desc:"Doğal sayılar, çarpan-kat, bölünebilme ve sayı ilişkileri.",rules:["Bir sayının çarpanları o sayıyı kalansız böler.","Ortak kat ve ortak bölen problemlerinde listeleme veya asal çarpanlardan yararlanılır.","İşlem önceliğinde parantez, çarpma-bölme, toplama-çıkarma sırası izlenir."],example:"3 + 4 × 2",steps:["Parantez yok.","Önce 4 × 2 = 8.","Sonra 3 + 8 = 11."],family:"num6a"},
+ {id:"6n2",title:"Sayılar ve Nicelikler (2)",desc:"Kesir, ondalık ve yüzde gösterimlerini ilişkilendirme.",rules:["Kesirler ortak paydada karşılaştırılabilir.","Ondalık gösterim basamak değerlerine göre okunur.","Yüzde, paydası 100 olan kesir gibi düşünülebilir."],example:"80 sayısının %25'i",steps:["%25 = 25/100 = 1/4.","80 ÷ 4 = 20.","Sonuç 20."],family:"num6b"},
+ {id:"6alg",title:"İşlemlerle Cebirsel Düşünme ve Değişimler",desc:"Örüntüler, bilinmeyenler ve cebirsel ilişkiler.",rules:["Bilinmeyen bir harfle gösterilebilir.","Eşitliğin iki tarafına aynı işlem uygulanırsa eşitlik korunur.","Örüntüde değişim kuralı bulunarak sonraki terim belirlenir."],example:"3x + 5 = 20",steps:["Her iki taraftan 5 çıkar: 3x = 15.","Her iki tarafı 3'e böl: x = 5.","Kontrol: 3×5+5=20."],family:"alg6"},
+ {id:"6gs",title:"Geometrik Şekiller",desc:"Açılar, çokgenler ve geometrik ilişkiler.",rules:["Doğru açı 180°'dir.","Üçgenin iç açıları toplamı 180°'dir.","Dörtgenin iç açıları toplamı 360°'dir."],example:"Bir üçgende 50° ve 60°",steps:["Toplam 180° olmalı.","50+60=110.","Eksik açı 180-110=70°."],family:"geo6"},
+ {id:"6gn",title:"Geometrik Nicelikler",desc:"Uzunluk, çevre, alan ve hacim ilişkileri.",rules:["Dikdörtgen alanı = kısa kenar × uzun kenar.","Dikdörtgen çevresi = 2×(kısa+uzun).","Dikdörtgenler prizması hacmi = uzunluk×genişlik×yükseklik."],example:"8 cm × 5 cm dikdörtgen",steps:["Alan = 8×5.","Alan = 40 cm².","Çevre = 2×(8+5)=26 cm."],family:"measure6"},
+ {id:"6stat",title:"İstatistiksel Araştırma Süreci",desc:"Veri toplama, düzenleme, özetleme ve yorumlama.",rules:["Aritmetik ortalama = toplam ÷ veri sayısı.","Açıklık = en büyük değer - en küçük değer.","Grafik seçimi verinin türüne göre yapılır."],example:"6, 8, 10, 12",steps:["Toplam 36.","4 veri var.","Ortalama 36÷4=9."],family:"stat"},
+ {id:"6prob",title:"Veriden Olasılığa",desc:"Deney, çıktı ve olasılığı veriler üzerinden yorumlama.",rules:["Olasılık 0 ile 1 arasındadır.","Eş olasılıklı durumlarda olasılık = istenen çıktı / tüm çıktı.","Kesin olayın olasılığı 1, imkânsız olayın olasılığı 0'dır."],example:"Bir torbada 3 kırmızı, 2 mavi top",steps:["Toplam 5 top var.","Kırmızı için 3 uygun çıktı var.","P(kırmızı)=3/5."],family:"prob"}
+],
+7:[
+ {id:"7n1",title:"Sayılar ve Nicelikler (1)",desc:"Tam sayılar, rasyonel sayılar ve işlemler.",rules:["Her tam sayı paydası 1 olan rasyonel sayıdır.","Rasyonel sayılar sayı doğrusunda gösterilebilir.","Rasyonel sayılarda dört işlem yapılırken işaret kuralları korunur."],example:"-3 + 7/2",steps:["-3 = -6/2.","-6/2 + 7/2 = 1/2.","Sonuç 1/2."],family:"rat7"},
+ {id:"7gn1",title:"Geometrik Nicelikler (1)",desc:"Dikdörtgenler prizmasının görünümleri, yüzey alanı ve hacmi.",rules:["Hacim = a×b×c.","Yüzey alanı karşılıklı yüzlerin alanlarının iki katlarının toplamıdır.","Hacim birimleri küp birimle ifade edilir."],example:"2×3×5 prizma",steps:["Hacim=2×3×5=30.","Yüzey alanı=2(6+15+10).","Yüzey alanı=62."],family:"prism"},
+ {id:"7stat",title:"İstatistiksel Araştırma Süreci",desc:"Kategorik/nicel veri, grafikler ve yorumlama.",rules:["Araştırma sorusu veri toplamaya uygun olmalıdır.","Ortalama, ortanca ve açıklık farklı özellikleri özetler.","Grafikler yorumlanırken ölçek ve eksenler kontrol edilir."],example:"5, 7, 7, 9, 12",steps:["Sıralı veri zaten hazır.","Ortanca ortadaki 7'dir.","Açıklık 12-5=7."],family:"stat"},
+ {id:"7trans",title:"Dönüşüm",desc:"Yansıma, simetri, orta dikme ve açıortay.",rules:["Yansımada şeklin boyutu değişmez.","Yansıyan nokta ile aslı simetri doğrusuna eşit uzaklıktadır.","y eksenine yansımada x işareti değişir."],example:"A(3,2) noktasının y eksenine yansıması",steps:["y değeri değişmez.","x işaret değiştirir.","A'(-3,2)."],family:"transform"},
+ {id:"7gs",title:"Geometrik Şekiller",desc:"Üçgende kenarortay, açıortay ve yükseklik.",rules:["Kenarortay, köşeyi karşı kenarın orta noktasına birleştirir.","Açıortay açıyı iki eş açıya böler.","Yükseklik karşı kenara veya uzantısına diktir."],example:"Eşkenar üçgende bir kenarortay",steps:["Eşkenar üçgende kenarlar eşittir.","Kenarortay aynı zamanda açıortaydır.","Aynı zamanda yüksekliktir."],family:"triConcept"},
+ {id:"7n2",title:"Sayılar ve Nicelikler (2)",desc:"Oran, orantı ve doğru orantılı durumlar.",rules:["Oran iki niceliğin çarpımsal karşılaştırmasıdır.","Denk oranların eşitliği orantıdır.","Doğru orantıda bir nicelik kaç kat artarsa diğeri de o kadar kat artar."],example:"3 kalem 24 TL ise 5 kalem",steps:["1 kalem=24÷3=8 TL.","5 kalem=5×8.","Sonuç 40 TL."],family:"ratio"},
+ {id:"7prob",title:"Veriden Olasılığa",desc:"Teorik olasılık, tümleyen, ayrık ve ayrık olmayan olaylar.",rules:["P(A)=uygun çıktı/tüm çıktı.","P(A)+P(A'nın tümleyeni)=1.","Ayrık olayların ortak çıktısı yoktur."],example:"Bir zarın çift gelmesi",steps:["Çıktılar 1,2,3,4,5,6.","Çiftler 2,4,6: 3 çıktı.","P=3/6=1/2."],family:"prob"},
+ {id:"7alg",title:"İşlemlerle Cebirsel Düşünme ve Değişimler",desc:"Cebirsel ifadeler, denklem ve eşitsizliklerle problem çözme.",rules:["Benzer terimler kendi aralarında toplanır.","Denklemin iki tarafına aynı işlem uygulanabilir.","Eşitsizlik negatif sayıyla çarpılıp bölünürse yön değişir."],example:"2x - 3 = 11",steps:["İki tarafa 3 ekle: 2x=14.","İkiye böl: x=7.","Kontrol: 14-3=11."],family:"alg7"},
+ {id:"7gn2",title:"Geometrik Nicelikler (2)",desc:"Yamuk, eşkenar dörtgen, daire ve daire dilimi alanları.",rules:["Yamuk alanı=(alt taban+üst taban)×yükseklik/2.","Eşkenar dörtgen alanı=köşegenler çarpımı/2.","Daire alanı=πr²."],example:"r=4 olan daire",steps:["Alan=π×4².","Alan=16π.","π≈3 alınırsa yaklaşık 48 birim²."],family:"area7"}
+],
+8:[
+ {id:"8factors",title:"Çarpanlar ve Katlar",desc:"Asal çarpanlar, EBOB ve EKOK problemleri.",rules:["EBOB ortak bölenlerin en büyüğüdür.","EKOK ortak katların en küçüğüdür.","Asal çarpanlara ayırma EBOB/EKOK hesaplamayı kolaylaştırır."],example:"EBOB(24,36)",steps:["24=2³×3.","36=2²×3².","Ortak küçük üsler: 2²×3=12."],family:"gcd"},
+ {id:"8exp",title:"Üslü İfadeler",desc:"Üs kuralları ve bilimsel gösterim.",rules:["a^m·a^n=a^(m+n).","a^m/a^n=a^(m-n), a≠0.","(a^m)^n=a^(m·n)."],example:"2³×2⁴",steps:["Tabanlar aynı.","Üsler toplanır: 3+4=7.","Sonuç 2⁷=128."],family:"exp"},
+ {id:"8root",title:"Kareköklü İfadeler",desc:"Karekök, kök dışına çıkarma ve işlemler.",rules:["√(a²)=|a|.","√(ab)=√a·√b (uygun a,b için).","Benzer köklü terimler toplanıp çıkarılabilir."],example:"√72",steps:["72=36×2.","√72=√36×√2.","Sonuç 6√2."],family:"root"},
+ {id:"8data",title:"Veri Analizi",desc:"Grafikler, veri dönüşümleri ve yorumlama.",rules:["Sütun, çizgi ve daire grafikleri farklı amaçlara uygundur.","Daire grafiğinde 360° bütün veriyi temsil eder.","Grafik dönüşümünde oran korunur."],example:"Toplam 40 öğrencinin 10'u A seçeneği",steps:["Oran=10/40=1/4.","Daire grafiği açısı=360×1/4.","Sonuç 90°."],family:"data8"},
+ {id:"8prob",title:"Basit Olayların Olma Olasılığı",desc:"Olasılık değerleri ve eş olasılıklı çıktılar.",rules:["0≤P(A)≤1.","P(A)=istenen durum/tüm eş olasılıklı durum.","Daha çok uygun çıktı, daha yüksek olasılık demektir."],example:"Zarda 4'ten büyük gelme",steps:["Uygun çıktılar 5 ve 6.","2 uygun, 6 toplam çıktı.","P=2/6=1/3."],family:"prob"},
+ {id:"8alg",title:"Cebirsel İfadeler ve Özdeşlikler",desc:"Cebirsel işlemler ve temel özdeşlikler.",rules:["(a+b)²=a²+2ab+b².","(a-b)²=a²-2ab+b².","(a-b)(a+b)=a²-b²."],example:"(x+3)²",steps:["a=x, b=3.","x²+2·x·3+9.","Sonuç x²+6x+9."],family:"identity"},
+ {id:"8linear",title:"Doğrusal Denklemler",desc:"Doğrusal ilişki, eğim, grafik ve denklem.",rules:["y=mx+n biçiminde m eğimdir.","Eğim=dikey değişim/yatay değişim.","Doğru üzerindeki noktalar denklemi sağlar."],example:"y=2x+1, x=3",steps:["x yerine 3 yaz.","y=2×3+1.","y=7."],family:"linear"},
+ {id:"8ineq",title:"Eşitsizlikler",desc:"Bir bilinmeyenli eşitsizlik ve sayı doğrusu.",rules:["Toplama-çıkarma eşitsizlik yönünü değiştirmez.","Negatif sayıyla çarpma/bölmede yön değişir.","Çözüm kümesi sayı doğrusunda gösterilebilir."],example:"2x+3<11",steps:["3 çıkar: 2x<8.","2'ye böl: x<4.","Çözüm 4'ten küçük sayılar."],family:"ineq"},
+ {id:"8tri",title:"Üçgenler",desc:"Üçgen ilişkileri ve Pisagor bağıntısı.",rules:["Dik üçgende a²+b²=c².","En uzun kenar hipotenüstür.","Üçgen eşitsizliğinde iki kenarın toplamı üçüncüden büyüktür."],example:"Dik kenarlar 6 ve 8",steps:["c²=6²+8².","c²=36+64=100.","c=10."],family:"pyth"},
+ {id:"8sim",title:"Eşlik ve Benzerlik",desc:"Benzerlik oranı, eş şekiller ve ölçek.",rules:["Eş şekillerin karşılıklı uzunlukları aynıdır.","Benzer şekillerde karşılıklı kenarlar aynı orandadır.","Alan oranı benzerlik oranının karesidir."],example:"Benzerlik oranı 2, küçük kenar 5",steps:["Karşılıklı kenarlar 2 katına çıkar.","5×2=10.","Büyük şeklin kenarı 10."],family:"similar"},
+ {id:"8trans",title:"Dönüşüm Geometrisi",desc:"Öteleme ve yansıma dönüşümleri.",rules:["Ötelemede her nokta aynı yön ve miktarda hareket eder.","Yansımada uzaklık korunur.","Dönüşümler şeklin temel biçimini korur."],example:"A(2,3), 4 birim sağa öteleme",steps:["x koordinatına 4 ekle.","y değişmez.","A'(6,3)."],family:"transform"},
+ {id:"8solid",title:"Geometrik Cisimler",desc:"Prizmalar ve geometrik cisimlerde alan-hacim.",rules:["Prizma hacmi=taban alanı×yükseklik.","Yüzey alanı tüm yüzlerin alanları toplamıdır.","Birimlere dikkat edilir."],example:"Taban alanı 12, yükseklik 5",steps:["Hacim=taban alanı×yükseklik.","12×5=60.","Hacim 60 birim³."],family:"solid"}
+]
+};
+
+let state=loadState();
+let currentGrade=state.grade||6;
+let currentTopic=null;
+let lessonIndex=0;
+let lessonSlides=[];
+let lessonAutoPlay=false;
+let activeTest=null;
+let timerInt=null;
+let voices=[];
+let aiAudio=null;
+let aiVoiceAvailable=true;
+
+function defaultState(){
+ return {grade:6,name:"Öykü",progress:{},wrongs:[],history:[],settings:{voice:"",rate:.9},diagnostic:{}};
+}
+function loadState(){
+ try{return Object.assign(defaultState(),JSON.parse(localStorage.getItem(APP_KEY)||"{}"))}catch(e){return defaultState()}
+}
+function saveState(){localStorage.setItem(APP_KEY,JSON.stringify(state))}
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
+function rnd(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+function pick(a){return a[rnd(0,a.length-1)]}
+function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function gcd(a,b){while(b)[a,b]=[b,a%b];return Math.abs(a)}
+function lcm(a,b){return Math.abs(a*b)/gcd(a,b)}
+function fmt(n){return Number.isInteger(n)?String(n):String(Math.round(n*100)/100).replace(".",",")}
+function pct(c,t){return t?Math.round(c/t*100):0}
+function topicById(id){for(const g of [6,7,8]){const t=DATA[g].find(x=>x.id===id);if(t)return t}return null}
+function progressFor(id){return state.progress[id]||{correct:0,total:0,streak:0,last:0}}
+function setNav(name){document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.nav===name))}
+function go(view,arg){speechSynthesis?.cancel?.();clearTimer();setNav(view); if(view==="home")renderHome(); if(view==="topics")renderTopics(arg||currentGrade); if(view==="roadmap")renderRoadmap(); if(view==="wrongs")renderWrongs(); if(view==="coach")renderCoach()}
+function view(html){document.getElementById("view").innerHTML=html;window.scrollTo({top:0,behavior:"smooth"})}
+
+function renderHome(){
+ currentGrade=state.grade||6;
+ const pAll=Object.values(state.progress);const tc=pAll.reduce((a,x)=>a+x.correct,0),tt=pAll.reduce((a,x)=>a+x.total,0);
+ view(`
+ <div class="card hero">
+   <h1>Merhaba ${esc(state.name)} 👋</h1>
+   <p>Matematiği dinle, gör, çöz ve kişisel yol haritanla adım adım ilerle.</p>
+ </div>
+ <div class="grid">
+   ${[6,7,8].map(g=>`<button class="classbtn" onclick="selectGrade(${g})"><b>${g}. Sınıf</b><span>${g===8?"LGS hazırlık, konu anlatımı ve yeni nesil pratik":"Sesli slayt dersleri ve dinamik soru pratikleri"}</span></button>`).join("")}
+ </div>
+ <div class="grid2">
+   <div class="card"><div class="small">Toplam başarı</div><b style="font-size:30px">${pct(tc,tt)}%</b><p class="muted">${tt} soru çözüldü</p></div>
+   <div class="card"><div class="small">Öykü AI önerisi</div><p style="font-size:18px;line-height:1.5">${esc(shortRecommendation())}</p><button class="btn primary" onclick="go('roadmap')">Yol haritamı aç</button></div>
+ </div>
+ <div class="card">
+   <div class="sectionTitle"><h2>Hızlı Başlangıç</h2></div>
+   <div class="grid2" style="margin-top:12px">
+     <button class="btn primary" onclick="startDiagnostic(${currentGrade})">🎯 Seviye Tespit Testi</button>
+     ${currentGrade===8?`<button class="btn warn" onclick="startLGS()">⏱️ 20 Soruluk LGS Pratiği</button>`:`<button class="btn secondary" onclick="renderTopics(${currentGrade})">📚 ${currentGrade}. Sınıf Konuları</button>`}
+   </div>
+   <p class="small" style="margin-top:12px">${CURRICULUM_NOTE}</p>
+ </div>`);
+}
+function selectGrade(g){state.grade=g;currentGrade=g;saveState();renderTopics(g)}
+function renderTopics(g){
+ currentGrade=g;state.grade=g;saveState();setNav("home");
+ view(`
+ <div class="sectionTitle"><button class="btn secondary" onclick="renderHome()">←</button><h2>${g}. Sınıf Matematik</h2>${g===8?`<button class="btn warn" onclick="startLGS()">LGS Pratiği</button>`:""}</div>
+ <p class="muted">Bir konu seç. Önce sesli slayt dersi, ardından seviyene göre pratik yapabilirsin.</p>
+ <div class="grid">
+ ${DATA[g].map(t=>{const p=progressFor(t.id),a=pct(p.correct,p.total);return `
+ <div class="topic">
+  <h3>${esc(t.title)}</h3><p>${esc(t.desc)}</p>
+  <div class="bar" style="margin-top:14px"><div class="fill" style="width:${a}%"></div></div>
+  <div class="meta"><span>${p.total?`${a}% • ${p.total} soru`:"Henüz başlanmadı"}</span><button class="btn primary" onclick="openTopic('${t.id}')">Aç</button></div>
+ </div>`}).join("")}
+ </div>`);
+}
+function openTopic(id){
+ currentTopic=topicById(id);const p=progressFor(id),a=pct(p.correct,p.total);
+ view(`<div class="sectionTitle"><button class="btn secondary" onclick="renderTopics(${currentGrade})">←</button><h2>${esc(currentTopic.title)}</h2></div>
+ <div class="card"><p style="font-size:19px;line-height:1.55">${esc(currentTopic.desc)}</p>
+ <div class="grid2">
+  <button class="btn primary" onclick="startLesson('${id}')">🎬 Sesli Slayt Konu Anlatımı</button>
+  <button class="btn good" onclick="choosePractice('${id}')">🧠 Soru Çöz</button>
+ </div></div>
+ <div class="grid2">
+  <div class="card"><div class="small">Bu konudaki başarı</div><b style="font-size:30px">${a}%</b><p class="muted">${p.correct} doğru / ${p.total} soru</p></div>
+  <div class="card"><div class="small">AI önerisi</div><p>${esc(topicRecommendation(id))}</p></div>
+ </div>
+ <div class="card"><h3>Bu derste öğreneceklerin</h3><div class="list">${currentTopic.rules.map(x=>`<div class="listitem">✓ ${esc(x)}</div>`).join("")}</div></div>`);
+}
+
+function startLesson(id){
+ currentTopic=topicById(id);lessonIndex=0;
+ lessonSlides=[
+  {title:currentTopic.title,kicker:`${currentGrade}. Sınıf • Konu Anlatımı`,body:`<p>${esc(currentTopic.desc)}</p>`,speech:`${currentTopic.title}. ${currentTopic.desc}`},
+  {title:"Temel fikirler",kicker:"Önce konuyu anlayalım",body:currentTopic.rules.map((r,i)=>`<div class="rulebox"><b>${i+1}.</b> ${esc(r)}</div>`).join(""),speech:"Bu konunun temel fikirleri şunlar. "+currentTopic.rules.join(". ")},
+  {title:"Öğretmen örneği",kicker:"Şimdi ben çözüyorum",body:`<div class="math">${esc(currentTopic.example)}</div><p>Örneği adım adım çözelim.</p>`,speech:`Şimdi bir örneği ben çözüyorum. ${currentTopic.example}. Adımları dikkatle izle.`},
+  {title:"Adım adım çözüm",kicker:"Örnek çözüm",body:currentTopic.steps.map((s,i)=>`<div class="rulebox"><b>Adım ${i+1}:</b> ${esc(s)}</div>`).join(""),speech:currentTopic.steps.map((s,i)=>`Adım ${i+1}. ${s}`).join(" ")},
+  {title:"Sıra sende",kicker:"Hazırsın",body:`<p>Şimdi aynı konudan sana özel, sayıları değişen sorular çözeceksin.</p><button class="btn primary" onclick="choosePractice('${id}')">Pratiğe Başla →</button>`,speech:"Şimdi sıra sende. Sana özel, her seferinde değişen sorularla pratik yapacağız."}
+ ];
+ lessonAutoPlay=true;
+ renderLesson(true);
+}
+function renderLesson(autoSpeak=false){
+ const s=lessonSlides[lessonIndex];
+ view(`<div class="sectionTitle"><button class="btn secondary" onclick="stopLessonAndOpenTopic()">✕</button><h2>Sesli Ders</h2><span class="chip">▶ Otomatik</span></div>
+ <div class="card lesson">
+  <div class="small">${esc(s.kicker)}</div><h1>${esc(s.title)}</h1>${s.body}
+ </div>
+ <div class="lessonNav"><button class="btn secondary" onclick="lessonPrev()">← Önceki</button><div class="count">${lessonIndex+1}/${lessonSlides.length}</div><button class="btn primary" onclick="lessonNext()">Sonraki →</button></div>
+ <div class="voice">
+   <button class="btn primary" onclick="restartLessonAuto()">▶ Baştan Otomatik Oynat</button>
+   <button class="btn secondary" onclick="stopLessonVoice()">⏸️ Durdur</button>
+   <select id="voiceSelect" onchange="saveVoice(this.value)"></select>
+   <label class="small">Hız <input id="rateRange" type="range" min=".75" max="1.15" step=".05" value="${state.settings.rate||.9}" onchange="saveRate(this.value)"></label>
+ </div>
+ <div class="small" style="text-align:center;margin-top:8px">🔊 Doğal anlatım etkinse duyduğun ses yapay zekâ tarafından oluşturulur; sunucu kullanılamazsa cihazın Türkçe sesi devreye girer.</div>`);
+ populateVoices();
+ if(autoSpeak) speakLesson(true);
+}
+function stopLessonVoice(){
+ lessonAutoPlay=false;
+ if(aiAudio){aiAudio.pause();aiAudio.src="";aiAudio=null;}
+ if("speechSynthesis" in window) speechSynthesis.cancel();
+}
+function stopLessonAndOpenTopic(){
+ stopLessonVoice();
+ openTopic(currentTopic.id);
+}
+function restartLessonAuto(){
+ if("speechSynthesis" in window) speechSynthesis.cancel();
+ lessonIndex=0;
+ lessonAutoPlay=true;
+ renderLesson(true);
+}
+function lessonNext(){
+ if(aiAudio){aiAudio.pause();aiAudio.src="";aiAudio=null;}
+ if("speechSynthesis" in window) speechSynthesis.cancel();
+ lessonAutoPlay=false;
+ if(lessonIndex<lessonSlides.length-1){lessonIndex++;renderLesson(false)}
+}
+function lessonPrev(){
+ if(aiAudio){aiAudio.pause();aiAudio.src="";aiAudio=null;}
+ if("speechSynthesis" in window) speechSynthesis.cancel();
+ lessonAutoPlay=false;
+ if(lessonIndex>0){lessonIndex--;renderLesson(false)}
+}
+function loadVoices(){voices=speechSynthesis.getVoices()||[]}
+if("speechSynthesis" in window){speechSynthesis.onvoiceschanged=loadVoices;loadVoices()}
+function populateVoices(){
+ loadVoices();const sel=document.getElementById("voiceSelect");if(!sel)return;
+ let tr=voices.filter(v=>(v.lang||"").toLowerCase().startsWith("tr"));if(!tr.length)tr=voices;
+ sel.innerHTML=tr.map(v=>`<option value="${esc(v.name)}">${esc(v.name)} (${esc(v.lang)})</option>`).join("");
+ if(state.settings.voice)sel.value=state.settings.voice;
+}
+function saveVoice(v){state.settings.voice=v;saveState()}
+function saveRate(v){state.settings.rate=Number(v);saveState()}
+async function speakLesson(autoAdvance=false){
+ const text=lessonSlides[lessonIndex].speech;
+ if(aiAudio){aiAudio.pause();aiAudio.src="";aiAudio=null;}
+ if("speechSynthesis" in window) speechSynthesis.cancel();
+
+ // Önce güvenli sunucudaki doğal yapay zekâ sesini dene.
+ if(aiVoiceAvailable){
+   try{
+     const r=await fetch("/api/tts",{
+       method:"POST",
+       headers:{"Content-Type":"application/json"},
+       body:JSON.stringify({text})
+     });
+     if(r.ok){
+       const blob=await r.blob();
+       const url=URL.createObjectURL(blob);
+       aiAudio=new Audio(url);
+       aiAudio.onended=()=>{
+         URL.revokeObjectURL(url);
+         aiAudio=null;
+         if(autoAdvance && lessonAutoPlay && lessonIndex<lessonSlides.length-1){
+           lessonIndex++;
+           renderLesson(true);
+         }else if(lessonIndex>=lessonSlides.length-1){
+           lessonAutoPlay=false;
+         }
+       };
+       aiAudio.onerror=()=>{URL.revokeObjectURL(url);aiAudio=null;browserSpeak(text,autoAdvance);};
+       await aiAudio.play();
+       return;
+     }
+     if(r.status===404 || r.status===503) aiVoiceAvailable=false;
+   }catch(e){
+     aiVoiceAvailable=false;
+   }
+ }
+ browserSpeak(text,autoAdvance);
+}
+
+function browserSpeak(text,autoAdvance=false){
+ if(!("speechSynthesis" in window))return alert("Bu cihaz sesli okumayı desteklemiyor.");
+ const u=new SpeechSynthesisUtterance(text);
+ u.lang="tr-TR";
+ u.rate=state.settings.rate||.9;
+ const v=voices.find(x=>x.name===state.settings.voice)||voices.find(x=>(x.lang||"").toLowerCase().startsWith("tr"));
+ if(v)u.voice=v;
+ if(autoAdvance){
+   lessonAutoPlay=true;
+   u.onend=()=>{
+     if(!lessonAutoPlay)return;
+     if(lessonIndex<lessonSlides.length-1){
+       lessonIndex++;
+       renderLesson(true);
+     }else{
+       lessonAutoPlay=false;
+     }
+   };
+ }
+ speechSynthesis.speak(u);
+}
+
+function choosePractice(id){
+ currentTopic=topicById(id);
+ view(`<div class="sectionTitle"><button class="btn secondary" onclick="openTopic('${id}')">←</button><h2>Pratik Ayarları</h2></div>
+ <div class="card">
+  <h3>${esc(currentTopic.title)}</h3>
+  <div class="formrow"><label>Zorluk</label><select id="diff"><option value="easy">Kolay</option><option value="medium" selected>Orta</option><option value="hard">Zor</option><option value="newgen">Yeni Nesil</option></select></div>
+  <div class="formrow"><label>Soru sayısı</label><select id="count"><option>10</option><option>15</option><option>20</option></select></div>
+  <button class="btn primary" onclick="startPractice('${id}')">Testi Başlat</button>
+ </div>`);
+}
+function startPractice(id){
+ const d=document.getElementById("diff")?.value||"medium",c=Number(document.getElementById("count")?.value||10);
+ beginTest({topicIds:[id],difficulty:d,count:c,type:"topic"});
+}
+function startDiagnostic(g){currentGrade=g;beginTest({topicIds:DATA[g].map(t=>t.id),difficulty:"medium",count:12,type:"diagnostic"})}
+function startLGS(){currentGrade=8;beginTest({topicIds:DATA[8].map(t=>t.id),difficulty:"newgen",count:20,type:"lgs",seconds:2400})}
+function beginTest(cfg){
+ activeTest={...cfg,index:0,correct:0,items:[],answered:false,started:Date.now(),remaining:cfg.seconds||0};
+ for(let i=0;i<cfg.count;i++){const tid=cfg.topicIds[i%cfg.topicIds.length];activeTest.items.push(makeQuestion(topicById(tid),cfg.difficulty))}
+ activeTest.items=shuffle(activeTest.items);renderQuestion();if(cfg.seconds)startTimer();
+}
+function startTimer(){clearTimer();timerInt=setInterval(()=>{activeTest.remaining--;const el=document.getElementById("timer");if(el)el.textContent=timeFmt(activeTest.remaining);if(activeTest.remaining<=0){clearTimer();finishTest()}},1000)}
+function clearTimer(){if(timerInt){clearInterval(timerInt);timerInt=null}}
+function timeFmt(s){return `${String(Math.floor(s/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`}
+function renderQuestion(){
+ const q=activeTest.items[activeTest.index];activeTest.answered=false;
+ view(`<div class="card">
+ <div class="qhead"><div class="grow"><b>${activeTest.index+1}/${activeTest.items.length}</b> <span class="badge">${esc(q.topicTitle)}</span><span class="badge">${diffName(activeTest.difficulty)}</span></div>${activeTest.seconds?`<div id="timer" class="timer">${timeFmt(activeTest.remaining)}</div>`:""}</div>
+ <div class="bar" style="margin-top:12px"><div class="fill" style="width:${(activeTest.index)/activeTest.items.length*100}%"></div></div>
+ <div class="question">${q.text}</div>
+ <div class="answers">${q.options.map((o,i)=>`<button class="answer" id="ans${i}" onclick="answerQuestion(${i})">${String.fromCharCode(65+i)}) ${esc(o)}</button>`).join("")}</div>
+ <div id="feedback"></div>
+ </div>`);
+}
+function answerQuestion(i){
+ if(activeTest.answered)return;activeTest.answered=true;const q=activeTest.items[activeTest.index],ok=i===q.correct;
+ if(ok)activeTest.correct++;
+ document.querySelectorAll(".answer").forEach((b,j)=>{b.disabled=true;if(j===q.correct)b.classList.add("correct");if(j===i&&!ok)b.classList.add("wrong")});
+ const p=progressFor(q.topicId);p.total++;if(ok){p.correct++;p.streak=(p.streak||0)+1}else{p.streak=0;state.wrongs.unshift({...q,when:Date.now()});state.wrongs=state.wrongs.slice(0,100)}p.last=Date.now();state.progress[q.topicId]=p;saveState();
+ document.getElementById("feedback").innerHTML=`<div class="explain"><b>${ok?"✅ Doğru":"❌ Yanlış"}</b><br>${esc(q.explain)}<br><br><button class="btn primary" onclick="nextQuestion()">${activeTest.index===activeTest.items.length-1?"Sonucu Gör":"Sonraki Soru →"}</button></div>`;
+}
+function nextQuestion(){if(activeTest.index<activeTest.items.length-1){activeTest.index++;renderQuestion()}else finishTest()}
+function finishTest(){
+ clearTimer();const a=Math.round(activeTest.correct/activeTest.items.length*100);
+ state.history.unshift({grade:currentGrade,type:activeTest.type,score:a,correct:activeTest.correct,total:activeTest.items.length,when:Date.now()});state.history=state.history.slice(0,50);saveState();
+ view(`<div class="card" style="text-align:center;padding:36px">
+ <div style="font-size:54px">${a>=80?"🏆":a>=60?"👏":"🧭"}</div><h1>${a}%</h1><p style="font-size:20px">${activeTest.correct} doğru / ${activeTest.items.length} soru</p>
+ <p>${esc(a>=80?"Harika gidiyorsun. Bir üst zorluk seviyesine geçebilirsin.":a>=60?"İyi gidiyorsun. Yanlışlarını inceleyip bir tur daha çöz.":"Bu konu için önce kısa tekrar ve ardından kolay-orta seviye pratik öneriyorum.")}</p>
+ <div class="grid2"><button class="btn primary" onclick="go('roadmap')">🧭 Yol Haritam</button><button class="btn secondary" onclick="renderTopics(${currentGrade})">Konulara Dön</button></div>
+ </div>`);
+}
+
+function renderRoadmap(){
+ setNav("roadmap");const rows=DATA[state.grade||6].map(t=>{const p=progressFor(t.id),a=pct(p.correct,p.total);return {t,p,a,priority:priority(p)}}).sort((x,y)=>y.priority-x.priority);
+ view(`<div class="sectionTitle"><h2>🧭 Kişisel Yol Haritası</h2><span class="chip">${state.grade||6}. Sınıf</span></div>
+ <div class="card"><h3>Bugünkü plan</h3><p style="font-size:19px;line-height:1.6">${esc(dailyPlan(rows))}</p></div>
+ <div class="list">${rows.map((x,i)=>`<div class="listitem"><b>${i+1}. ${esc(x.t.title)}</b><div class="small" style="margin:5px 0">${x.p.total?`Başarı ${x.a}% • ${x.p.total} soru`:"Henüz veri yok • Tanıma çalışması öneriliyor"}</div><div class="bar"><div class="fill" style="width:${x.a}%"></div></div><button class="btn ${i<2?"primary":"secondary"}" style="margin-top:10px" onclick="openTopic('${x.t.id}')">${i<2?"Bugün çalış":"Konuya git"}</button></div>`).join("")}</div>`);
+}
+function priority(p){if(!p.total)return 100;return (100-pct(p.correct,p.total)) + Math.max(0,15-Math.min(p.total,15))*2}
+function dailyPlan(rows){
+ const a=rows[0]?.t.title,b=rows[1]?.t.title;
+ return `Önce “${a}” için kısa konu anlatımını izle ve 10 orta seviye soru çöz. Ardından “${b}” konusunda 10 soru çöz. İlk konudaki başarı %70'in altında kalırsa zor seviyeye geçme; aynı konuyu bir kez daha tekrar et.`;
+}
+function weakest(){
+ const rows=DATA[state.grade||6].map(t=>({t,p:progressFor(t.id)})).filter(x=>x.p.total>0).sort((a,b)=>pct(a.p.correct,a.p.total)-pct(b.p.correct,b.p.total));
+ return rows[0]||null;
+}
+function shortRecommendation(){const w=weakest();return w?`Şu anda önceliğin ${w.t.title}. Başarın %${pct(w.p.correct,w.p.total)}; kısa tekrar + 10 soru öneriyorum.`:`Önce seviye tespit testini çöz. Sonuca göre kişisel yol haritanı oluşturacağım.`}
+function topicRecommendation(id){const p=progressFor(id),a=pct(p.correct,p.total);if(!p.total)return "Önce sesli konu anlatımını izle, ardından 10 kolay-orta soru çöz.";if(a<50)return "Konu eksiği görünüyor. Dersi tekrar izle ve kolay seviyede 10 soru çöz.";if(a<75)return "Temel oturuyor. Orta seviyede 15 soru ve yanlış tekrarı yap.";return "Konu güçlü. Zor ve yeni nesil sorulara geçebilirsin."}
+
+function renderWrongs(){
+ setNav("wrongs");
+ view(`<div class="sectionTitle"><h2>📝 Yanlışlarım</h2>${state.wrongs.length?`<button class="btn danger" onclick="clearWrongs()">Temizle</button>`:""}</div>
+ ${state.wrongs.length?`<div class="list">${state.wrongs.slice(0,30).map((q,i)=>`<div class="listitem"><span class="badge">${esc(q.topicTitle)}</span><p><b>${esc(q.text)}</b></p><div class="small">Doğru cevap: ${esc(q.options[q.correct])}</div><div class="small">${esc(q.explain)}</div></div>`).join("")}</div>`:`<div class="card"><p>Henüz kayıtlı yanlış yok. 🎉</p></div>`}`);
+}
+function clearWrongs(){if(confirm("Yanlış listesini temizleyelim mi?")){state.wrongs=[];saveState();renderWrongs()}}
+
+function renderCoach(){
+ setNav("coach");const w=weakest();
+ view(`<div class="card coach">
+  <div class="sectionTitle"><h2>🤖 Öykü AI</h2><span class="chip" style="background:#fff;color:#111827">Yerel Öğrenme Koçu</span></div>
+  <div class="bubble" id="coachBubble">${esc(w?`Seni takip ediyorum. Şu an en çok destek istediğin alan ${w.t.title}; burada başarı oranın %${pct(w.p.correct,w.p.total)}.`:"Henüz yeterli çözüm verin yok. Seviye tespit testiyle başlarsak sana daha iyi bir yol haritası çıkarabilirim.")}</div>
+  <div class="chatrow"><input id="coachInput" placeholder="Bugün ne çalışmalıyım?"><button class="btn primary" onclick="askCoach()">Sor</button></div>
+  <div class="small" style="color:#c8d0df;margin-top:12px">Bu sürüm cihaz içinde çalışan adaptif analiz motorudur. Gerçek üretken yapay zekâ bağlantısı için API anahtarını gizleyen güvenli sunucu gerekir.</div>
+ </div>
+ <div class="card"><h3>Hızlı sorular</h3><div class="grid2">
+ <button class="btn secondary" onclick="coachQuick('Bugün ne çalışmalıyım?')">Bugün ne çalışmalıyım?</button>
+ <button class="btn secondary" onclick="coachQuick('En zayıf konum hangisi?')">En zayıf konum hangisi?</button>
+ <button class="btn secondary" onclick="coachQuick('Yanlışlarımı nasıl azaltırım?')">Yanlışlarımı nasıl azaltırım?</button>
+ <button class="btn secondary" onclick="coachQuick('LGS için ne yapmalıyım?')">LGS için ne yapmalıyım?</button>
+ </div></div>`);
+}
+function coachQuick(s){document.getElementById("coachInput").value=s;askCoach()}
+function askCoach(){
+ const q=(document.getElementById("coachInput").value||"").toLowerCase(),w=weakest();let r="";
+ if(q.includes("bugün")||q.includes("calis")||q.includes("çalış")){r=dailyPlan(DATA[state.grade||6].map(t=>({t,p:progressFor(t.id),priority:priority(progressFor(t.id))})).sort((a,b)=>b.priority-a.priority))}
+ else if(q.includes("zayıf")||q.includes("zor")){r=w?`En zayıf görünen konun ${w.t.title}. ${w.p.total} soruda %${pct(w.p.correct,w.p.total)} başarı var. Önce dersi tekrar izle, sonra 10 kolay ve 10 orta soru çöz.`:"Bunu söylemek için biraz daha veri lazım. Önce seviye tespit testini çöz."}
+ else if(q.includes("yanlış")){r=`Kayıtlı ${state.wrongs.length} yanlışın var. Yanlış soruyu hemen ezberlemek yerine çözüm adımını açıklamaya çalış; 24 saat sonra aynı beceriden yeni bir soru çöz.`}
+ else if(q.includes("lgs")){r=state.grade===8?"LGS için önce konu eksiğini kapat, sonra süreli 20 soruluk karma pratik yap. %75 altındaki konuları ayrı günlerde tekrar et.":"LGS çalışma modu 8. sınıf bölümünde aktif."}
+ else {r=w?`${w.t.title} konusundan başlayalım. Konu anlatımını izle, ardından orta seviyede 10 soru çöz; sonuçtan sonra rotayı güncellerim.`:"Seviye tespit testiyle başlarsan sana daha kişisel öneri verebilirim."}
+ document.getElementById("coachBubble").textContent=r;
+}
+
+function openSettings(){
+ document.getElementById("modal").classList.remove("hide");
+ document.getElementById("modal").innerHTML=`<div class="modalbox"><h2>Ayarlar</h2>
+ <div class="formrow"><label>Öğrenci adı</label><input id="setName" value="${esc(state.name)}"></div>
+ <div class="formrow"><label>Varsayılan sınıf</label><select id="setGrade"><option ${state.grade==6?"selected":""}>6</option><option ${state.grade==7?"selected":""}>7</option><option ${state.grade==8?"selected":""}>8</option></select></div>
+ <p class="small">İlerleme bu cihazın tarayıcısında saklanır.</p>
+ <div class="grid2"><button class="btn primary" onclick="saveSettings()">Kaydet</button><button class="btn secondary" onclick="closeModal()">Kapat</button></div>
+ </div>`;
+}
+function saveSettings(){state.name=document.getElementById("setName").value.trim()||"Öykü";state.grade=Number(document.getElementById("setGrade").value);saveState();closeModal();renderHome()}
+function closeModal(){document.getElementById("modal").classList.add("hide")}
+
+/* -------- Dinamik ve özgün soru motoru -------- */
+function mcq(topic,text,correctValue,wrongValues,explain){
+ const vals=[String(correctValue),...wrongValues.map(String)].filter((v,i,a)=>a.indexOf(v)===i);
+ while(vals.length<4)vals.push(String(Number(correctValue)+vals.length+rnd(1,4)));
+ const opts=shuffle(vals.slice(0,4));return {topicId:topic.id,topicTitle:topic.title,text,options:opts,correct:opts.indexOf(String(correctValue)),explain};
+}
+function makeQuestion(t,d){
+ const hard=d==="hard"||d==="newgen",m=hard?2:1;
+ switch(t.family){
+ case "num6a":{
+   if(Math.random()<.5){let a=rnd(2,9),b=rnd(2,9),c=rnd(1,20);let ans=c+a*b;return mcq(t,`${c} + ${a} × ${b} işleminin sonucu kaçtır?`,ans,[c+a+b,(c+a)*b,ans+a],`Önce çarpma yapılır: ${a}×${b}=${a*b}; sonra ${c}+${a*b}=${ans}.`)}
+   let n=rnd(4,12)*rnd(2,6);
+   let divs=[];for(let i=1;i<=n;i++)if(n%i===0)divs.push(i);
+   let ans=pick(divs);
+   let wrongs=[];
+   for(let x=2;wrongs.length<3 && x<=n+12;x++){
+     if(n%x!==0 && x!==ans && !wrongs.includes(x)) wrongs.push(x);
+   }
+   while(wrongs.length<3){
+     let x=rnd(2,n+20);
+     if(n%x!==0 && x!==ans && !wrongs.includes(x)) wrongs.push(x);
+   }
+   return mcq(t,`${n} sayısının bir çarpanı hangisidir?`,ans,wrongs,`${ans}, ${n} sayısını kalansız böler.`)
+ }
+ case "num6b":{
+   let base=rnd(4,20)*10,percent=pick([10,20,25,50]),ans=base*percent/100;return mcq(t,`${base} sayısının %${percent}'i kaçtır?`,fmt(ans),[fmt(ans+5),fmt(base-percent),fmt(ans*2)],`%${percent} = ${percent}/100. ${base}×${percent}/100 = ${fmt(ans)}.`)
+ }
+ case "alg6":case "alg7":{
+   let x=rnd(2,12)*m,a=rnd(2,6),b=rnd(1,12),rhs=a*x+b;return mcq(t,`${a}x + ${b} = ${rhs} olduğuna göre x kaçtır?`,x,[x+1,x-1,x+2],`Önce ${b} çıkarılır: ${a}x=${a*x}. Sonra ${a}'e bölünür: x=${x}.`)
+ }
+ case "geo6":{
+   let a=rnd(30,80),b=rnd(30,80);if(a+b>=170)b=40;let ans=180-a-b;return mcq(t,`Bir üçgende iki açı ${a}° ve ${b}° ise üçüncü açı kaç derecedir?`,ans,[ans+10,180-a,180-b],`Üçgenin iç açıları toplamı 180°: 180-${a}-${b}=${ans}°.`)
+ }
+ case "measure6":{
+   let a=rnd(3,12),b=rnd(3,12);let ans=a*b;return mcq(t,`Kenarları ${a} cm ve ${b} cm olan dikdörtgenin alanı kaç cm²'dir?`,ans,[2*(a+b),ans+a,ans-b],`Alan = ${a}×${b} = ${ans} cm².`)
+ }
+ case "stat":{
+   let a=rnd(3,10),b=a+2,c=b+2,d=c+2,ans=(a+b+c+d)/4;return mcq(t,`${a}, ${b}, ${c}, ${d} veri grubunun aritmetik ortalaması kaçtır?`,fmt(ans),[fmt(ans+1),fmt(ans-1),fmt(d-a)],`Toplam ${a+b+c+d}; veri sayısı 4. Ortalama=${fmt(ans)}.`)
+ }
+ case "prob":{
+   let red=rnd(2,6),blue=rnd(2,6),tot=red+blue;let ans=`${red}/${tot}`;return mcq(t,`Bir torbada ${red} kırmızı ve ${blue} mavi top var. Rastgele seçilen topun kırmızı olma olasılığı nedir?`,ans,[`${blue}/${tot}`,`1/${tot}`,`${red}/${blue}`],`Uygun çıktı ${red}, tüm çıktı ${tot}; olasılık ${red}/${tot}.`)
+ }
+ case "rat7":{
+   let a=rnd(-8,8),b=rnd(1,8);let ans=a+b;return mcq(t,`${a} + ${b} işleminin sonucu kaçtır?`,ans,[ans+1,ans-1,-ans],`Tam sayıları sayı doğrusunda düşün: ${a}+${b}=${ans}.`)
+ }
+ case "prism":case "solid":{
+   let a=rnd(2,6),b=rnd(2,7),c=rnd(2,8),ans=a*b*c;return mcq(t,`Boyutları ${a}, ${b} ve ${c} birim olan dikdörtgenler prizmasının hacmi kaç birim³'tür?`,ans,[a*b+b*c,2*(a*b+a*c+b*c),ans+c],`Hacim=${a}×${b}×${c}=${ans}.`)
+ }
+ case "transform":{
+   let x=rnd(1,8),y=rnd(-5,7);if(Math.random()<.5){let ans=`(-${x}, ${y})`;return mcq(t,`A(${x}, ${y}) noktasının y eksenine göre yansıması hangisidir?`,ans,[`(${x}, ${-y})`,`(-${x}, ${-y})`,`(${x+1}, ${y})`],`y eksenine yansımada x işaret değiştirir, y aynı kalır.`)}
+   let k=rnd(2,6),ans=`(${x+k}, ${y})`;return mcq(t,`A(${x}, ${y}) noktası ${k} birim sağa ötelenirse yeni konumu nedir?`,ans,[`(${x-k}, ${y})`,`(${x}, ${y+k})`,`(${x+k}, ${y+k})`],`Sağa ötelemede x koordinatına ${k} eklenir.`)
+ }
+ case "triConcept":{
+   let qs=[
+    ["Bir üçgende köşeyi karşı kenarın orta noktasına birleştiren doğru parçasına ne denir?","Kenarortay",["Açıortay","Yükseklik","Orta dikme"],"Tanım gereği bu doğru parçası kenarortaydır."],
+    ["Bir açıyı iki eş açıya bölen ışına ne denir?","Açıortay",["Kenarortay","Yükseklik","Kiriş"],"Açıyı iki eş parçaya ayıran ışın açıortaydır."]
+   ];let q=pick(qs);return mcq(t,q[0],q[1],q[2],q[3])
+ }
+ case "ratio":{
+   let q=rnd(2,6),unit=rnd(4,15),n=rnd(4,9),cost=q*unit,ans=n*unit;return mcq(t,`${q} ürün ${cost} TL ise aynı fiyattan ${n} ürün kaç TL olur?`,ans,[ans-unit,ans+unit,cost+n],`Birim fiyat ${cost}÷${q}=${unit} TL. ${n} ürün=${n}×${unit}=${ans} TL.`)
+ }
+ case "area7":{
+   let r=rnd(2,8),ans=3*r*r;return mcq(t,`π=3 alındığında yarıçapı ${r} birim olan dairenin alanı kaç birim²'dir?`,ans,[6*r,3*r,ans+r],`Alan=πr²=3×${r}²=${ans}.`)
+ }
+ case "gcd":{
+   let g=rnd(2,8),a=g*rnd(2,8),b=g*rnd(2,8);let ans=gcd(a,b);return mcq(t,`EBOB(${a}, ${b}) kaçtır?`,ans,[ans+1,Math.min(a,b),g*2],`Ortak bölenlerin en büyüğü ${ans}'dir.`)
+ }
+ case "exp":{
+   let base=pick([2,3,5]),m1=rnd(2,4),m2=rnd(2,4),pow=m1+m2,ans=base**pow;return mcq(t,`${base}^${m1} × ${base}^${m2} işleminin sonucu kaçtır?`,ans,[base**(m1*m2),base**Math.max(m1,m2),ans+base],`Tabanlar aynı olduğundan üsler toplanır: ${m1}+${m2}=${pow}.`)
+ }
+ case "root":{
+   let a=rnd(2,10),ans=a;let n=a*a;return mcq(t,`√${n} kaçtır?`,ans,[a+1,a-1,n/2],`${a}×${a}=${n} olduğu için √${n}=${a}.`)
+ }
+ case "data8":{
+   let total=pick([20,40,60,80]),part=total/4,ans=90;return mcq(t,`Bir grupta ${total} kişinin ${part}'i bir seçeneği tercih ediyor. Daire grafiğinde bu grubun merkez açısı kaç derecedir?`,ans,[45,120,180],`${part}/${total}=1/4 ve 360×1/4=90°.`)
+ }
+ case "identity":{
+   let a=rnd(2,8),ans=2*a;return mcq(t,`(x + ${a})² açılımında x'in katsayısı kaçtır?`,ans,[a,a*a,2*a*a],`(x+a)²=x²+2ax+a². x'in katsayısı 2a=${ans}.`)
+ }
+ case "linear":{
+   let m0=rnd(2,6),x=rnd(2,7),n=rnd(1,8),ans=m0*x+n;return mcq(t,`y=${m0}x+${n} doğrusal ilişkisinde x=${x} iken y kaçtır?`,ans,[ans-m0,ans+n,m0+x+n],`x yerine ${x} yazılır: y=${m0}×${x}+${n}=${ans}.`)
+ }
+ case "ineq":{
+   let a=rnd(2,5),limit=rnd(3,10),b=rnd(1,8),rhs=a*limit+b;let ans=`x < ${limit}`;return mcq(t,`${a}x + ${b} < ${rhs} eşitsizliğinin çözümü hangisidir?`,ans,[`x > ${limit}`,`x < ${limit+1}`,`x > ${limit-1}`],`${b} çıkarılır, sonra ${a}'e bölünür: x<${limit}.`)
+ }
+ case "pyth":{
+   let triples=pick([[3,4,5],[5,12,13],[6,8,10],[8,15,17]]),k=hard?rnd(1,3):1,a=triples[0]*k,b=triples[1]*k,c=triples[2]*k;return mcq(t,`Dik kenarları ${a} ve ${b} olan dik üçgenin hipotenüsü kaçtır?`,c,[c-1,c+1,a+b],`Pisagor: c²=${a}²+${b}²=${c*c}; c=${c}.`)
+ }
+ case "similar":{
+   let k=rnd(2,4),small=rnd(3,10),ans=k*small;return mcq(t,`Benzer iki şeklin benzerlik oranı ${k}. Küçük şekilde ${small} birim olan kenarın büyük şekildeki karşılığı kaç birimdir?`,ans,[small+k,small*k*k,ans-1],`Karşılıklı kenarlar ${k} katına çıkar: ${small}×${k}=${ans}.`)
+ }
+ default:{
+   let a=rnd(2,20),b=rnd(2,20),ans=a+b;return mcq(t,`${a}+${b} kaçtır?`,ans,[ans+1,ans-1,a*b],`${a}+${b}=${ans}.`)
+ }
+ }
+}
+function diffName(d){return ({easy:"Kolay",medium:"Orta",hard:"Zor",newgen:"Yeni Nesil"})[d]||d}
+
+renderHome();
+</script>
+<script>
+if("serviceWorker" in navigator){
+  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+}
+</script>
+</body>
+</html>
