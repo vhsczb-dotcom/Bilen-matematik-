@@ -204,34 +204,42 @@
   let puan = 0;
 
   const soruBankasi = {
-    6: [
-      {
-        soru: "48 ÷ 6 işleminin sonucu kaçtır?",
-        secenekler: ["6", "7", "8", "9"],
-        cevap: "8"
-      },
-      {
-        soru: "3 × (5 + 2) işleminin sonucu kaçtır?",
-        secenekler: ["18", "21", "24", "30"],
-        cevap: "21"
-      },
-      {
-        soru: "Bir sayının 4 katı 36 ise bu sayı kaçtır?",
-        secenekler: ["7", "8", "9", "10"],
-        cevap: "9"
-      },
-      {
-        soru: "0,5 + 1,25 işleminin sonucu kaçtır?",
-        secenekler: ["1,50", "1,65", "1,75", "2,00"],
-        cevap: "1,75"
-      },
-      {
-        soru: "3/4 kesrine denk olan kesir hangisidir?",
-        secenekler: ["6/8", "4/8", "5/8", "7/8"],
-        cevap: "6/8"
-      }
-    ],
+   6: {
+  sayilar1: [
+    {
+      soru: "48 ÷ 6 işleminin sonucu kaçtır?",
+      secenekler: ["6", "7", "8", "9"],
+      cevap: "8"
+    },
+    {
+      soru: "3 × (5 + 2) işleminin sonucu kaçtır?",
+      secenekler: ["18", "21", "24", "30"],
+      cevap: "21"
+    },
+    {
+      soru: "Bir sayının 4 katı 36 ise bu sayı kaçtır?",
+      secenekler: ["7", "8", "9", "10"],
+      cevap: "9"
+    },
+    {
+      soru: "0,5 + 1,25 işleminin sonucu kaçtır?",
+      secenekler: ["1,50", "1,65", "1,75", "2,00"],
+      cevap: "1,75"
+    },
+    {
+      soru: "3/4 kesrine denk olan kesir hangisidir?",
+      secenekler: ["6/8", "4/8", "5/8", "7/8"],
+      cevap: "6/8"
+    }
+  ],
 
+  sayilar2: [],
+  cebir: [],
+  geometrikSekiller: [],
+  geometrikNicelikler: [],
+  istatistik: [],
+  olasilik: []
+},
     7: [
       {
         soru: "-6 + 9 işleminin sonucu kaçtır?",
@@ -331,7 +339,11 @@ function konuSec6(konu) {
     soruNo = 0;
     puan = 0;
 
-    aktifSorular = [...soruBankasi[secilenSinif]];
+  if (secilenSinif === 6) {
+  aktifSorular = [...soruBankasi[6][secilenKonu]];
+} else {
+  aktifSorular = [...soruBankasi[secilenSinif]];
+}
 
     if (mod === "karisik" || mod === "lgs") {
       aktifSorular.sort(() => Math.random() - 0.5);
