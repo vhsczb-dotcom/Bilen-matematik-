@@ -124,7 +124,43 @@
         <button class="sinif" onclick="sinifSec(8)">8. Sınıf / LGS</button>
       </div>
     </div>
+<div id="konuEkrani6" class="gizli">
+  <h2>6. Sınıf Matematik Konuları</h2>
 
+  <div class="butonlar">
+    <button class="Sinif" onclick="konuSec6('sayilar1')">
+      Sayılar ve Nicelikler - 1
+    </button>
+
+    <button class="Sinif" onclick="konuSec6('sayilar2')">
+      Sayılar ve Nicelikler - 2
+    </button>
+
+    <button class="Sinif" onclick="konuSec6('cebir')">
+      İşlemlerle Cebirsel Düşünme ve Değişimler
+    </button>
+
+    <button class="Sinif" onclick="konuSec6('geometrikSekiller')">
+      Geometrik Şekiller
+    </button>
+
+    <button class="Sinif" onclick="konuSec6('geometrikNicelikler')">
+      Geometrik Nicelikler
+    </button>
+
+    <button class="Sinif" onclick="konuSec6('istatistik')">
+      İstatistiksel Araştırma Süreci
+    </button>
+
+    <button class="Sinif" onclick="konuSec6('olasilik')">
+      Veriden Olasılığa
+    </button>
+  </div>
+
+  <button class="geri" onclick="anaMenu()">
+    ← Sınıf Seçimine Dön
+  </button>
+</div>
     <div id="modEkrani" class="gizli">
       <h2 id="sinifBaslik"></h2>
 
@@ -161,6 +197,7 @@
 
 <script>
   let secilenSinif = null;
+  let secilenKonu = null;
   let secilenMod = null;
   let aktifSorular = [];
   let soruNo = 0;
@@ -254,7 +291,11 @@
 
   function sinifSec(sinif) {
     secilenSinif = sinif;
-
+if (sinif === 6) {
+  document.getElementById("sinifEkrani").classList.add("gizli");
+  document.getElementById("konuEkrani6").classList.remove("gizli");
+  return;
+}
     document.getElementById("sinifEkrani").classList.add("gizli");
     document.getElementById("modEkrani").classList.remove("gizli");
 
@@ -267,7 +308,24 @@
       document.getElementById("lgsButon").classList.add("gizli");
     }
   }
+function konuSec6(konu) {
+  secilenKonu = konu;
+  document.getElementById("konuEkrani6").classList.add("gizli");
+  document.getElementById("modEkrani").classList.remove("gizli");
 
+  const konuAdlari = {
+    sayilar1: "Sayılar ve Nicelikler - 1",
+    sayilar2: "Sayılar ve Nicelikler - 2",
+    cebir: "İşlemlerle Cebirsel Düşünme ve Değişimler",
+    geometrikSekiller: "Geometrik Şekiller",
+    geometrikNicelikler: "Geometrik Nicelikler",
+    istatistik: "İstatistiksel Araştırma Süreci",
+    olasilik: "Veriden Olasılığa"
+  };
+
+  document.getElementById("sinifBaslik").innerText =
+    "6. Sınıf - " + konuAdlari[konu];
+}
   function testBaslat(mod) {
     secilenMod = mod;
     soruNo = 0;
